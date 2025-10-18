@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Timer and Countdown</title>
+  <style>
+    :root{
+      --bg:#eef1ff; --digit:#000; --frame:#2f2f2f;
+      --green:#0bd20b; --green-dark:#07a607;
+      --red:#ff0909; --red-dark:#c50707;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#fff;color:#111}
+    h1{ text-align:center; margin:24px 8px 16px; font-weight:800; }
+
+    .toolbar{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:12px auto 20px; padding:0 12px; }
+    .btn{ cursor:pointer; user-select:none; border:none; border-radius:20px; font-size:18px; padding:12px 18px; box-shadow:0 2px 0 rgba(0,0,0,.25); transition:transform .05s ease; background:#e9e9e9; }
+    .btn:active{ transform:translateY(1px) }
+    .btn-primary{ background:#222; color:#fff }
+    .btn-ghost{ background:#f5f5f5 }
+
+    .grid{ max-width:1200px; margin:0 auto 48px; padding:0 16px 24px; display:grid; grid-template-columns:repeat(auto-fill,minmax(460px,1fr)); gap:18px; }
+
+    .timer-card{ position:relative; padding:18px 18px 22px; border-radius:22px; border:3px solid #e9e9e9; background:#fff; box-shadow:0 6px 22px rgba(0,0,0,.06); }
+    .timer-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .badge{ font-size:13px; font-weight:700; padding:4px 10px; border-radius:999px; background:#eef2ff; border:1px solid #cfd7ff; color:#263bff; text-transform:uppercase; letter-spacing:.04em; }
+    .delete{ background:transparent; border:none; font-size:22px; cursor:pointer; line-height:1; color:#888; padding:2px 6px; border-radius:8px; }
+    .delete:hover{ background:#f5f5f5; color:#111 }
+
+    /* DISPLAY estilo referencia */
+    .display{ position:relative; background:var(--bg); border:12px solid var(--frame); border-radius:40px; padding:26px 30px; min-height:150px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .fitbox{ position:relative; transform-origin:center; }
+    .digits{ font-variant-numeric:tabular-nums; font-weight:900; color:var(--digit); line-height:.9; font-size:128px; letter-spacing:2px; white-space:nowrap; }
+    .millis{ position:absolute; right:26px; bottom:12px; font-variant-numeric:tabular-nums; font-weight:800; color:#111; opacity:.9; font-size:34px; }
+
+    /* Botones Start / Clear grandes */
+    .controls{ display:flex; gap:26px; justify-content:center; align-items:center; margin-top:18px; flex-wrap:wrap; }
+    .btn-big{ min-width:320px; max-width:480px; padding:22px 28px; border-radius:38px; font-size:56px; font-weight:800; border:12px solid #333; color:#0c0c0c; }
+    .btn-start{ background:linear-gradient(#1cff1c,var(--green)); }
+    .btn-start:active{ background:linear-gradient(#18d918,var(--green-dark)); }
+    .btn-clear{ background:linear-gradient(#ff2e2e,var(--red)); }
+    .btn-clear:active{ background:linear-gradient(#de2323,var(--red-dark)); }
+
+    /* Sub-bar para cuenta atrás */
+    .subbar{ margin-top:12px; display:flex; gap:8px; justify-content:center; align-items:center; flex-wrap:wrap; font-size:14px; }
+    .time-input{ font-variant-numeric:tabular-nums; font-size:16px; padding:8px 10px; border-radius:10px; border:1px solid #d9d9d9; width:160px; text-align:center; letter-spacing:1px; }
+
+    .info{ text-align:center; font-size:12px; color:#666; margin-top:8px; }
+
+    @media (max-width:520px){
+      .btn-big{ min-width:260px }
+      .grid{ grid-template-columns:1fr }
+      .display{ border-width:10px; border-radius:28px }
+      .digits{ font-size:96px }
+      .millis{ font-size:28px }
+    }
+  </style>
+</head>
+<body>
+  <h1>Timer and Countdown</h1>
+
+  <!-- 🔴 IDs imprescindibles -->
+  <div class="toolbar" role="group" aria-label="Add timers">
+    <button id="addStopwatch" class="btn btn-primary">➕ Añadir cronómetro</button>
+    <button id="addCountdown" class="btn btn-primary">➕ Añadir cuenta atrás</button>
+    <button id="requestNotif" class="btn btn-ghost" title="Habilitar notificaciones">🔔 Activar notificaciones</button>
+  </div>
+
+  <div id="list" class="grid" aria-live="polite"></div>
+
+  <p class="info">Formato fijo <b>HH:MM:SS</b>. Ej.: <code>00:01:00</code>. Valores fuera de rango se normalizan (p. ej. <code>00:75:00</code> → <code>01:15:00</code>).</p>
+
+  <script src="script.js"></script>
+</body>
+</html>
